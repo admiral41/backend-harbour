@@ -52,42 +52,46 @@ const createEmailTemplate = (data, type) => `
 
 // Contact Form Endpoint
 app.post('/api/contact', async (req, res) => {
-  try {
-    const { name, email, phone, message } = req.body;
-    
-    await sendEmail({
-      email: process.env.ADMIN_EMAIL,
-      subject: 'New Contact Form Submission',
-      html: createEmailTemplate({ name, email, phone, message }, 'contact'),
-      text: `New contact submission:\nName: ${name}\nEmail: ${email}\nPhone: ${phone}\nMessage: ${message}`
-    });
+    try {
+        const { name, email, phone, message } = req.body;
 
-    res.status(200).json({ success: true });
-  } catch (error) {
-    console.error('Contact form error:', error);
-    res.status(500).json({ success: false, error: 'Failed to send message' });
-  }
+        await sendEmail({
+            email: process.env.ADMIN_EMAIL,
+            subject: 'New Contact Form Submission',
+            html: createEmailTemplate({ name, email, phone, message }, 'contact'),
+            text: `New contact submission:\nName: ${name}\nEmail: ${email}\nPhone: ${phone}\nMessage: ${message}`
+        });
+
+        res.status(200).json({ success: true });
+    } catch (error) {
+        console.error('Contact form error:', error);
+        res.status(500).json({ success: false, error: 'Failed to send message' });
+    }
 });
 
 // Booking Form Endpoint
 app.post('/api/booking', async (req, res) => {
-  try {
-    const { name, phone, contactPreference, service, message } = req.body;
+    try {
+        const { name, phone, contactPreference, service, message } = req.body;
 
-    await sendEmail({
-      email: process.env.ADMIN_EMAIL,
-      subject: `New Booking: ${service}`,
-      html: createEmailTemplate({ name, phone, contactPreference, service, message }, 'booking'),
-      text: `New booking request:\nName: ${name}\nPhone: ${phone}\nService: ${service}\nMessage: ${message}`
-    });
+        await sendEmail({
+            email: process.env.ADMIN_EMAIL,
+            subject: `New Booking: ${service}`,
+            html: createEmailTemplate({ name, phone, contactPreference, service, message }, 'booking'),
+            text: `New booking request:\nName: ${name}\nPhone: ${phone}\nService: ${service}\nMessage: ${message}`
+        });
 
-    res.status(200).json({ success: true });
-  } catch (error) {
-    console.error('Booking form error:', error);
-    res.status(500).json({ success: false, error: 'Failed to submit booking' });
-  }
+        res.status(200).json({ success: true });
+    } catch (error) {
+        console.error('Booking form error:', error);
+        res.status(500).json({ success: false, error: 'Failed to submit booking' });
+    }
+});
+
+app.get('/', (req, res) => {
+    res.send('Welcome to the Harbour Sparkle API!');
 });
 
 app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+    console.log(`Server running on port ${port}`);
 });
